@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz Results</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Quiz Result</h1>
+
+    <h2 id="student"></h2>
+    <h2 id="marks"></h2>
+    <h3 id="message"></h3>
+
+    <button onclick="location.href='index.html'">
+        Take Another Quiz
+    </button>
+
+</div>
+
+<script>
+const data = localStorage.getItem("quizResult");
+
+if (data) {
+    const result = JSON.parse(data);
+
+    document.getElementById("student").innerText =
+        "Student Name: " + result.studentName;
+
+    document.getElementById("marks").innerText =
+        "Marks Obtained: " + result.marks + "/" + result.totalMarks;
+
+    document.getElementById("message").innerText =
+        result.marks >= 3
+        ? "Congratulations!"
+        : "Keep Practicing!";
+
+} else {
+    document.getElementById("student").innerText =
+        "No result available. Please take the quiz first.";
+}
+</script>
+
+</body>
+</html>

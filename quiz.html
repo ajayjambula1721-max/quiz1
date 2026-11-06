@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Computer Science Quiz</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Computer Science Quiz</h1>
+    <p>Answer all five questions and submit your quiz.</p>
+
+    <form id="quizForm">
+
+        <div class="question">
+            <h3>1. What does CPU stand for?</h3>
+            <label><input type="radio" name="q1" value="A"> Central Processing Unit</label><br>
+            <label><input type="radio" name="q1" value="B"> Computer Personal Unit</label><br>
+            <label><input type="radio" name="q1" value="C"> Central Program Utility</label><br>
+            <label><input type="radio" name="q1" value="D"> Control Processing Unit</label>
+        </div>
+
+        <div class="question">
+            <h3>2. Which language is used to create web page structure?</h3>
+            <label><input type="radio" name="q2" value="A"> Python</label><br>
+            <label><input type="radio" name="q2" value="B"> HTML</label><br>
+            <label><input type="radio" name="q2" value="C"> Java</label><br>
+            <label><input type="radio" name="q2" value="D"> C++</label>
+        </div>
+
+        <div class="question">
+            <h3>3. What is the full form of RAM?</h3>
+            <label><input type="radio" name="q3" value="A"> Read Access Memory</label><br>
+            <label><input type="radio" name="q3" value="B"> Run Access Memory</label><br>
+            <label><input type="radio" name="q3" value="C"> Random Access Memory</label><br>
+            <label><input type="radio" name="q3" value="D"> Real Application Memory</label>
+        </div>
+
+        <div class="question">
+            <h3>4. Which data structure follows FIFO?</h3>
+            <label><input type="radio" name="q4" value="A"> Stack</label><br>
+            <label><input type="radio" name="q4" value="B"> Tree</label><br>
+            <label><input type="radio" name="q4" value="C"> Graph</label><br>
+            <label><input type="radio" name="q4" value="D"> Queue</label>
+        </div>
+
+        <div class="question">
+            <h3>5. Who originally developed Java?</h3>
+            <label><input type="radio" name="q5" value="A"> Microsoft</label><br>
+            <label><input type="radio" name="q5" value="B"> Google</label><br>
+            <label><input type="radio" name="q5" value="C"> Sun Microsystems</label><br>
+            <label><input type="radio" name="q5" value="D"> IBM</label>
+        </div>
+
+        <button type="submit">Submit Quiz</button>
+
+    </form>
+
+</div>
+
+<script>
+document.getElementById("quizForm").addEventListener("submit", async function(e) {
+
+    e.preventDefault();
+
+    const answers = {};
+
+    // Collect answers
+    for (let i = 1; i <= 5; i++) {
+
+        const selected = document.querySelector(
+            'input[name="q' + i + '"]:checked'
+        );
+
+        if (!selected) {
+            alert("Please answer all questions!");
+            return;
+        }
+
+        answers["q" + i] = selected.value;
+    }
+
+    // Get student name
+    const studentName = localStorage.getItem("studentName");
+
+    if (!studentName) {
+        alert("Please enter your name first!");
+        window.location.href = "index.html";
+        return;
+    }
+
+    try {
+
+        const response = await fetch("/submit-quiz", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                studentName: studentName,
+                answers: answers
+            })
+        });
+
+      const text = await response.text();
+
+let result;
+
+try {
+    result = JSON.parse(text);
+} catch (error) {
+    console.log("Server returned HTML:", text);
+    throw new Error("API route not found. Check app.js and restart server.");
+}
+
+        if (!response.ok) {
+            throw new Error(result.error || "Submission failed");
+        }
+
+        // Save result for results page
+        localStorage.setItem("quizResult", JSON.stringify(result));
+
+        // Open results page
+        window.location.href = "result.html";
+
+    } catch (error) {
+
+        console.error(error);
+        alert("Error: " + error.message);
+
+    }
+
+});
+</script>
+
+</body>
+</html>

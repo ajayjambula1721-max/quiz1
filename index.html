@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Online Quiz System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Online Quiz Management System</h1>
+        <p>Test Your Computer Science Knowledge</p>
+
+        <input type="text" id="studentName"
+               placeholder="Enter Your Name">
+
+        <button onclick="startQuiz()">Start Quiz</button>
+    </div>
+
+    <script>
+        function startQuiz() {
+            const name = document.getElementById("studentName").value.trim();
+
+            if (name === "") {
+                alert("Please enter your name!");
+                return;
+            }
+
+            localStorage.setItem("studentName", name);
+            window.location.href = "quiz.html";
+        }
+    </script>
+
+</body>
+</html>
